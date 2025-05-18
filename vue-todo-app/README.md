@@ -1,6 +1,11 @@
 # vue-todo-app
 
-This template should help get you started developing with Vue 3 in Vite.
+untuk account login :
+1. http://localhost:5173/login  (halaman login)
+Email:    [adx-01@mail.com](mailto:adx-01@mail.com)
+Password: 1234567890.
+2. http://localhost:5173/todos
+halaman dashboard page 
 
 ## Recommended IDE Setup
 
