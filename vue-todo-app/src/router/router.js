@@ -18,11 +18,8 @@ const router = createRouter({
   routes,
 })
 
-// Router guard for authentication
 router.beforeEach((to, from, next) => {
-  // Create the store instance here, so it works in any context
   const auth = useAuthStore()
-
   if (to.meta.requiresAuth && !auth.isLoggedIn) {
     next('/login')
   } else if (to.path === '/login' && auth.isLoggedIn) {

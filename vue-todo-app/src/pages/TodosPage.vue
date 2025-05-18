@@ -1,9 +1,9 @@
 <template>
   <div>
     <!-- Header -->
-    <header class="bg-blue-600 text-white flex justify-between items-center p-4">
+    <header class="bg-[#42b883] text-white flex justify-between items-center p-4">
       <h1 class="text-lg font-semibold">Dashboard Todo Vue</h1>
-      <button @click="logout" class="bg-white text-blue-600 font-semibold px-4 py-1 rounded hover:bg-gray-200">Logout</button>
+      <button @click="logout" class="bg-white text-[#42b883] font-semibold px-4 py-1 rounded hover:bg-gray-200">Logout</button>
     </header>
 
     <!-- Content -->
@@ -23,7 +23,7 @@
           rows="3"
           required
         ></textarea>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Todo</button>
+        <button type="submit" class="bg-[#42b883] text-white px-4 py-2 rounded hover:bg-[#369c6f]">Add Todo</button>
       </form>
 
       <!-- Todo List -->
@@ -45,14 +45,14 @@
             ></textarea>
             <div class="flex gap-2 justify-end">
               <button @click="cancelEdit" type="button" class="px-3 py-1 rounded border hover:bg-gray-100">Cancel</button>
-              <button @click="saveEdit(todo.id)" type="button" class="px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700">Save</button>
+              <button @click="saveEdit(todo.id)" type="button" class="px-3 py-1 rounded bg-[#42b883] text-white hover:bg-[#369c6f]">Save</button>
             </div>
           </div>
           <div v-else>
             <h3 class="font-semibold">{{ todo.title }}</h3>
             <p class="text-gray-600 mb-2">{{ todo.description }}</p>
             <div class="flex gap-4 justify-end text-sm">
-              <button @click="startEdit(todo)" class="text-blue-600 hover:underline">Edit</button>
+              <button @click="startEdit(todo)" class="text-[#42b883] hover:underline">Edit</button>
               <button @click="deleteTodo(todo.id)" class="text-red-600 hover:underline">Delete</button>
             </div>
           </div>
@@ -72,11 +72,9 @@ const todosStore = useTodosStore()
 const auth = useAuthStore()
 const router = useRouter()
 
-// Form for adding todo
 const newTitle = ref('')
 const newDescription = ref('')
 
-// Form for editing todo
 const editingTodoId = ref<number | null>(null)
 const editingTitle = ref('')
 const editingDescription = ref('')
@@ -87,12 +85,21 @@ onMounted(() => {
 
 const addTodo = async () => {
   if (!newTitle.value.trim() || !newDescription.value.trim()) return
-  await todosStore.addTodo({
-    title: newTitle.value.trim(),
-    description: newDescription.value.trim()
-  })
-  newTitle.value = ''
-  newDescription.value = ''
+
+  try {
+    // Asumsi store memiliki method addTodo yang menerima object {title, description}
+    await todosStore.addTodo({
+      title: newTitle.value.trim(),
+      description: newDescription.value.trim()
+    })
+    // Setelah berhasil tambah, reset input
+    newTitle.value = ''
+    newDescription.value = ''
+    // Update list (jika store tidak otomatis update)
+    await todosStore.fetchTodos()
+  } catch (error) {
+    console.error('Failed to add todo:', error)
+  }
 }
 
 const deleteTodo = async (id: number) => {
